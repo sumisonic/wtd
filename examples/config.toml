@@ -1,0 +1,36 @@
+# Example wtd config — place at ~/.config/wtd/config.toml (defaults apply if absent)
+
+[general]
+# Base branch. "auto" picks develop if it exists, otherwise the default branch.
+# It also enables a smart rule: while on the base branch itself (main/develop), the
+# anchor switches to the upstream (origin/<base>), so unpushed commits also show up
+# as cumulative diff and history.
+# An explicit value like "develop" always anchors to that branch, with no smart rule.
+base = "auto"
+poll_ms = 2000       # polling fallback interval (ms)
+narrow_cols = 100    # below this width the UI drops to a single column
+
+[ui]
+icons = true                 # Nerd Font icons (set to false if the font is unavailable)
+split_pct = 38               # tree column width (%)
+theme = "base16-ocean.dark"  # syntect theme name
+wrap = true                  # wrap long diff lines (toggled with the w key)
+
+[open]
+default = "emacs"
+
+# Openers are command templates. Placeholders:
+#   {file}     absolute path of the selected file
+#   {line}     new line number of the first changed hunk
+#   {worktree} path of the worktree
+#   {repo}     path of the main checkout
+
+[open.emacs]
+# Open in a running Emacs daemon without stealing focus
+cmd = ["emacsclient", "-n", "+{line}", "{file}"]
+
+[open.nvim]
+cmd = ["nvr", "--remote-silent", "+{line}", "{file}"]
+
+[open.vscode]
+cmd = ["code", "-g", "{file}:{line}"]
